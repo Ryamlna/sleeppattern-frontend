@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const MENU = [
-  { key: 'dashboard', to: '/dashboard', icon: '📊', label: 'Dashboard' },
-  { key: 'recap', to: '/recap', icon: '📑', label: 'Recap' },
-  { key: 'edukasi', to: '/edukasi', icon: '💡', label: 'Edukasi' },
-  { key: 'pengaturan', to: '/pengaturan', icon: '⚙️', label: 'Pengaturan' },
+  { key: 'dashboard', to: '/dashboard', icon: '', label: 'Dashboard' },
+  { key: 'recap', to: '/recap', icon: '', label: 'Recap' },
+  { key: 'edukasi', to: '/edukasi', icon: '', label: 'Edukasi' },
+  { key: 'pengaturan', to: '/pengaturan', icon: '', label: 'Pengaturan' },
 ];
 
 /**
@@ -111,7 +111,7 @@ export default function MobileNav({ active, onLogout, hideButton = false }) {
           }}
           className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium"
         >
-          <span>🚪</span> Keluar
+          <span></span> Keluar
         </button>
       </aside>
     </div>

@@ -155,7 +155,7 @@ export default function Recap() {
         </div>
         <div>
           <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium">
-            <span>🚪</span> Keluar
+            <span></span> Keluar
           </button>
         </div>
       </aside>
@@ -163,7 +163,7 @@ export default function Recap() {
       <div className="flex-1 min-h-screen pb-20 relative z-10">
         <header className="max-w-6xl mx-auto px-8 pt-8 pb-6 flex justify-between items-center border-b border-slate-900">
           <div>
-            <h1 className="text-2xl font-bold text-white">Sleep Recap 🏆</h1>
+            <h1 className="text-2xl font-bold text-white">Sleep Recap</h1>
             <p className="text-slate-400 text-sm mt-0.5">Lihat kembali jejak pola tidurmu bulan ini.</p>
           </div>
           <div className="flex items-center gap-6">

@@ -7,26 +7,25 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [greeting, setGreeting] = useState('Selamat Pagi');
-
   const [records, setRecords] = useState([]);
   const [averageDuration, setAverageDuration] = useState(0);
   const [qualityScore, setQualityScore] = useState(0);
   const [recommendation, setRecommendation] = useState('Catat tidur pertamamu untuk mendapatkan rekomendasi harian!');
-
+  
   const [date, setDate] = useState('');
   const [sleepTime, setSleepTime] = useState('');
   const [wakeTime, setWakeTime] = useState('');
   const [quality, setQuality] = useState('good');
   const [usedGadget, setUsedGadget] = useState(false);
   const [didExercise, setDidExercise] = useState(false);
-
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null });
   const [successModal, setSuccessModal] = useState(false);
-  const [detailModal, setDetailModal] = useState({ isOpen: false, record: null });
+  const [detailModal, setDetailModal] = useState({ isopen: false, record: null });
 
+  // PERBAIKAN: Menggunakan URL dinamis Vercel (import.meta.env.VITE_API_URL)
   const fetchRecords = async (email) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/sleep/${email}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep/${email}`);
       const data = await res.json();
       if (res.ok) {
         setRecords(data);
@@ -44,24 +43,21 @@ export default function Dashboard() {
       setQualityScore(0);
       return;
     }
-    
     let totalHours = 0;
     let totalQualityScore = 0;
-
     data.forEach(record => {
       const sleep = new Date(record.sleepTime);
       const wake = new Date(record.wakeTime);
       const diffInHours = (wake - sleep) / (1000 * 60 * 60);
+      
       totalHours += diffInHours > 0 ? diffInHours : diffInHours + 24;
-
+      
       if (record.quality === 'good') totalQualityScore += 100;
       else if (record.quality === 'fair') totalQualityScore += 70;
       else if (record.quality === 'poor') totalQualityScore += 40;
     });
-    
     const avgHrs = (totalHours / data.length).toFixed(1);
     const avgScore = Math.round(totalQualityScore / data.length);
-    
     setAverageDuration(avgHrs);
     setQualityScore(avgScore);
   };
@@ -71,11 +67,11 @@ export default function Dashboard() {
       setRecommendation("Catat tidur pertamamu untuk melihat analisis di sini.");
       return;
     }
-    const latest = data[0]; 
+    const latest = data[0];
     if (latest.quality === 'poor' && latest.usedGadget) {
       setRecommendation("Tidurmu kurang optimal semalam. Coba jauhkan HP 30 menit sebelum tidur malam ini agar lebih nyenyak!");
     } else if (latest.quality === 'good' && latest.didExercise) {
-      setRecommendation("Hebat! Olahragamu bikin tidur jadi sangat nyenyak. Pertahankan rutinitas sehat ini!");
+      setRecommendation("Hebat! Olahragamu bikin tidur jadi sangat nyenyak.. Pertahankan rutinitas sehat ini!");
     } else if (latest.quality === 'poor' || latest.quality === 'fair') {
       setRecommendation("Kualitas tidurmu sedang menurun. Cobalah lakukan relaksasi atau dengarkan musik tenang sebelum tidur.");
     } else if (latest.quality === 'good') {
@@ -92,7 +88,7 @@ export default function Dashboard() {
     } else {
       navigate('/');
     }
-
+    
     const hour = new Date().getHours();
     if (hour < 11) setGreeting('Selamat Pagi');
     else if (hour < 15) setGreeting('Selamat Siang');
@@ -105,10 +101,11 @@ export default function Dashboard() {
     navigate('/');
   };
 
+  // PERBAIKAN: Menggunakan URL dinamis Vercel (import.meta.env.VITE_API_URL)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/sleep', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email, date, sleepTime, wakeTime, quality, usedGadget, didExercise }),
@@ -128,14 +125,17 @@ export default function Dashboard() {
     }
   };
 
+  // PERBAIKAN: Menggunakan URL dinamis Vercel (import.meta.env.VITE_API_URL)
   const confirmDelete = async () => {
     const id = deleteModal.id;
-    setDeleteModal({ isOpen: false, id: null });
+    setDeleteModal({ isopen: false, id: null });
     try {
-      const res = await fetch(`http://localhost:5000/api/sleep/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep/${id}`, { 
+        method: 'DELETE' 
+      });
       if (res.ok) {
         fetchRecords(user.email);
-        setDetailModal({ isOpen: false, record: null });
+        setDetailModal({ isopen: false, record: null });
       } else {
         alert("Gagal menghapus data.");
       }
@@ -154,22 +154,20 @@ export default function Dashboard() {
       return { day: new Date(r.date).toLocaleDateString('id-ID', { weekday: 'short' }), duration: hours };
     });
     while (chartData.length < 7) {
-      chartData.unshift({ day: '-', duration: 0 });
+      chartData.unshift({ day: '', duration: 0 });
     }
     return chartData;
   };
 
   if (!user) return null;
-
+  
   const strokeOffset = 326 - (326 * qualityScore / 100);
   const chartData = getChartData();
 
   return (
     <div className="min-h-screen bg-slate-950 text-white font-sans flex selection:bg-green-500 selection:text-slate-900 relative">
-      
       {/* SUNTIKKAN KOMPONEN BINTANG DI SINI */}
       <StarBackground />
-      
       {/* SIDEBAR: Tambahkan 'relative z-10' */}
       <aside className="w-64 border-r border-slate-800/80 p-6 hidden lg:flex flex-col justify-between bg-slate-950 relative z-10">
         <div className="space-y-8">
@@ -179,26 +177,26 @@ export default function Dashboard() {
           </div>
           <nav className="space-y-2 text-sm font-medium text-slate-400">
             <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800">
-              <span>📊</span> Dashboard
+              <span></span> Dashboard
             </Link>
             <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>📑</span> Recap
+              <span></span> Recap
             </Link>
             <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>💡</span> Edukasi
+              <span></span> Edukasi
             </Link>
             <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>⚙️</span> Pengaturan
+              <span></span> Pengaturan
             </Link>
           </nav>
         </div>
         <div>
           <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium">
-            <span>🚪</span> Keluar
+            <span></span> Keluar
           </button>
         </div>
       </aside>
-
+      
       {/* KONTEN UTAMA: Tambahkan 'relative z-10' */}
       <div className="flex-1 min-h-screen pb-20 relative z-10">
         <header className="max-w-6xl mx-auto px-8 pt-8 pb-6 flex justify-between items-center border-b border-slate-900">
@@ -216,13 +214,12 @@ export default function Dashboard() {
             <img src={user.picture} alt="Profile" className="w-10 h-10 rounded-full border border-slate-700 object-cover" referrerPolicy="no-referrer" />
           </div>
         </header>
-
+        
         <main className="max-w-6xl mx-auto px-8 pt-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 flex flex-col items-center justify-center text-center backdrop-blur-sm">
               <h3 className="text-slate-400 text-sm font-medium mb-4">Skor Kualitas Tidur</h3>
-              <div className="w-28 h-28 flex items-center justify-center relative">
+              <div className="relative w-28 h-28 flex items-center justify-center">
                 <svg className="absolute inset-0 w-full h-full transform -rotate-90">
                   <circle cx="56" cy="56" r="52" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-800" />
                   <circle cx="56" cy="56" r="52" stroke="currentColor" strokeWidth="6" fill="transparent" strokeDasharray="326" strokeDashoffset={strokeOffset} className={`${qualityScore >= 80 ? 'text-green-500' : qualityScore >= 60 ? 'text-yellow-500' : 'text-red-500'} transition-all duration-1000`} strokeLinecap="round" />
@@ -235,7 +232,7 @@ export default function Dashboard() {
                 {qualityScore >= 80 ? "Bagus Sekali" : qualityScore >= 60 ? "Cukup" : "Perlu Di Perbaiki Pola tidur nya"}
               </p>
             </div>
-
+            
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between backdrop-blur-sm">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-slate-400 text-sm font-medium">Grafik Durasi Tidur</h3>
@@ -258,10 +255,7 @@ export default function Dashboard() {
                             {item.duration.toFixed(1)} Jam
                           </div>
                         )}
-                        <div 
-                          className={`w-full rounded-t-sm transition-all duration-700 ${item.duration > 0 ? 'bg-green-500 hover:bg-green-400 cursor-pointer' : 'bg-transparent'}`} 
-                          style={{ height: `${barHeight}%`, minHeight: item.duration > 0 ? '4px' : '0' }}
-                        ></div>
+                        <div className={`w-full rounded-t-sm transition-all duration-700 ${item.duration > 0 ? 'bg-green-500 hover:bg-green-400 cursor-pointer' : 'bg-transparent'}`} style={{ height: `${barHeight}%`, minHeight: item.duration > 0 ? '4px' : '0' }}></div>
                         <span className="text-[10px] text-slate-500 font-medium capitalize absolute -bottom-6">{item.day}</span>
                       </div>
                     );
@@ -269,7 +263,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-
+            
             <div className="flex flex-col gap-4">
               <div className="flex gap-4">
                 <div className="flex-1 bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-center backdrop-blur-sm">
@@ -285,28 +279,28 @@ export default function Dashboard() {
                     <div className="relative w-6 h-6 flex items-center justify-center">
                       <style>
                         {`
-                          @keyframes fireFlicker {
-                            0%, 100% { transform: scale(1) skewX(0deg); opacity: 1; }
-                            30% { transform: scale(1.05) skewX(2deg); opacity: 0.9; }
-                            60% { transform: scale(0.95) skewX(-2deg); opacity: 1; }
-                            80% { transform: scale(1.02) skewX(1deg); opacity: 0.8; }
-                          }
-                          .animate-fire {
-                            animation: fireFlicker 1.2s infinite ease-in-out alternate;
-                            transform-origin: bottom center;
-                          }
-                          @keyframes fireInner {
-                            0%, 100% { transform: scale(1); opacity: 1; }
-                            50% { transform: scale(1.15) translateY(-1px); opacity: 0.8; }
-                          }
-                          .animate-fire-inner {
-                            animation: fireInner 0.8s infinite ease-in-out alternate;
-                            transform-origin: bottom center;
-                          }
+                        @keyframes fireFlicker {
+                          0%, 100% { transform: scale(1) skewX(0deg); opacity: 1; }
+                          30% { transform: scale(1.05) skewX(2deg); opacity: 0.9; }
+                          60% { transform: scale(0.95) skewX(-2deg); opacity: 1; }
+                          80% { transform: scale(1.02) skewX(1deg); opacity: 0.8; }
+                        }
+                        .animate-fire {
+                          animation: fireFlicker 1.2s infinite ease-in-out alternate;
+                          transform-origin: bottom center;
+                        }
+                        @keyframes fireInner {
+                          0%, 100% { transform: scale(1); opacity: 1; }
+                          50% { transform: scale(1.15) translateY(-1px); opacity: 0.8; }
+                        }
+                        .animate-fire-inner {
+                          animation: fireInner 0.8s infinite ease-in-out alternate;
+                          transform-origin: bottom center;
+                        }
                         `}
                       </style>
                       <svg viewBox="0 0 24 24" className="w-7 h-7 drop-shadow-md" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path className="animate-fire" d="M12 2C12 2 8 6 8 10C8 10 9.5 8 9.5 8C9.5 8 6 10.5 6 15C6 19.4183 9.58172 23 14 23C18.4183 23 22 19.4183 22 15C22 11 19 9 19 9C19 9 17.5 14 17.5 14C17.5 14 15 7 12 2Z" fill="#F97316" />
+                        <path className="animate-fire" d="M12 20C12 20 8 16 8 10C8 10 9.5 8 9.5 8C9.5 8 6 10.5 6 15C6 19.4183 9.58172 23 14 23C18.4183 23 22 19.4183 22 15C22 11 19 9 19 9C19 9 17.5 14 17.5 14C17.5 14 15 7 12 2" fill="#F97316" />
                         <path className="animate-fire-inner" d="M14 23C11 23 9 20.5 9 17C9 14.5 11 12.5 11 12.5C11 12.5 10.5 15 12 16C13.5 17 14 14.5 14 14.5C14 14.5 17 15.5 17 18.5C17 21 15.5 23 14 23Z" fill="#FBBF24" />
                       </svg>
                     </div>
@@ -315,7 +309,7 @@ export default function Dashboard() {
               </div>
               <div className="flex-1 bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-center backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-green-400">💡</span>
+                  <span className="text-green-400"></span>
                   <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider">Rekomendasi Hari Ini</h3>
                 </div>
                 <p className="text-sm font-medium text-slate-200 leading-relaxed">
@@ -324,7 +318,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-
+          
           <div className="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-8 backdrop-blur-sm">
             <h3 className="text-lg font-bold mb-6 text-slate-200">Riwayat Tidur Terbaru</h3>
             {records.length === 0 ? (
@@ -335,9 +329,8 @@ export default function Dashboard() {
                   const sleepDate = new Date(record.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
                   const sleepTimeStr = new Date(record.sleepTime).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
                   const wakeTimeStr = new Date(record.wakeTime).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                  
                   return (
-                    <div key={record.id} onClick={() => setDetailModal({ isOpen: true, record })} className="flex justify-between items-center p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-green-500/40 hover:bg-slate-800/50 transition-all cursor-pointer group shadow-sm">
+                    <div key={record.id} onClick={() => setDetailModal({ isopen: true, record })} className="flex justify-between items-center p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-green-500/40 hover:bg-slate-800/50 transition-all cursor-pointer group shadow-sm">
                       <div>
                         <p className="font-semibold text-slate-200 text-sm group-hover:text-green-400 transition-colors">{sleepDate}</p>
                         <p className="text-xs text-slate-400 mt-0.5">Jam Tidur: {sleepTimeStr} - {wakeTimeStr}</p>
@@ -358,14 +351,14 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
-
+      
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity">
           <div className="absolute inset-0" onClick={() => setIsModalOpen(false)}></div>
           <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl z-10">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold">Catat Tidur Hari Ini 🌙</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">✕</button>
+              <h2 className="text-xl font-bold">Catat Tidur Hari Ini</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">X</button>
             </div>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div><label className="block text-xs font-medium text-slate-400 mb-1">Tanggal</label><input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-green-500 [color-scheme:dark]" /></div>
@@ -397,14 +390,14 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
+      
       {detailModal.isOpen && detailModal.record && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity">
-          <div className="absolute inset-0" onClick={() => setDetailModal({ isOpen: false, record: null })}></div>
+          <div className="absolute inset-0" onClick={() => setDetailModal({ isopen: false, record: null })}></div>
           <div className="relative w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl z-10">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold">Detail Tidur 🔍</h2>
-              <button onClick={() => setDetailModal({ isOpen: false, record: null })} className="text-slate-400 hover:text-white">✕</button>
+              <h2 className="text-xl font-bold">Detail Tidur</h2>
+              <button onClick={() => setDetailModal({ isopen: false, record: null })} className="text-slate-400 hover:text-white">X</button>
             </div>
             <div className="space-y-5">
               <div className="pb-4 border-b border-slate-800">
@@ -427,13 +420,13 @@ export default function Dashboard() {
                 <p className="text-xs text-slate-400 mb-2">Kebiasaan Ekstra</p>
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between bg-slate-950/50 p-3 rounded-xl border border-slate-800">
-                    <span className="text-sm text-slate-300">📱 Penggunaan Gadget</span>
+                    <span className="text-sm text-slate-300">Penggunaan Gadget</span>
                     <span className={`text-xs font-bold px-3 py-1 rounded-full ${detailModal.record.usedGadget ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}`}>
                       {detailModal.record.usedGadget ? 'Ya' : 'Tidak'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between bg-slate-950/50 p-3 rounded-xl border border-slate-800">
-                    <span className="text-sm text-slate-300">🏃‍♂️ Olahraga Hari Itu</span>
+                    <span className="text-sm text-slate-300">Olahraga Hari Itu</span>
                     <span className={`text-xs font-bold px-3 py-1 rounded-full ${detailModal.record.didExercise ? 'bg-green-500/10 text-green-400' : 'bg-slate-800 text-slate-400'}`}>
                       {detailModal.record.didExercise ? 'Ya' : 'Tidak'}
                     </span>
@@ -441,11 +434,11 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <button onClick={() => setDetailModal({ isOpen: false, record: null })} className="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-bold transition-colors">Tutup Detail</button>
+            <button onClick={() => setDetailModal({ isopen: false, record: null })} className="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-bold transition-colors">Tutup Detail</button>
           </div>
         </div>
       )}
-
+      
       {deleteModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity">
           <div className="absolute inset-0" onClick={() => setDeleteModal({ isOpen: false, id: null })}></div>
@@ -462,7 +455,7 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
+      
       {successModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity">
           <div className="relative w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center text-center">
@@ -476,7 +469,6 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

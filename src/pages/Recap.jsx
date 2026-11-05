@@ -140,16 +140,16 @@ export default function Recap() {
           </div>
           <nav className="space-y-2 text-sm font-medium text-slate-400">
             <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>📊</span> Dashboard
+              <span></span> Dashboard
             </Link>
             <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800">
-              <span>📑</span> Recap
+              <span></span> Recap
             </Link>
             <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>💡</span> Edukasi
+              <span></span> Edukasi
             </Link>
             <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>⚙️</span> Pengaturan
+              <span></span> Pengaturan
             </Link>
           </nav>
         </div>

@@ -24,7 +24,7 @@ export default function TentangKami() {
           SleepPattern lahir dari pemahaman bahwa kualitas tidur berbanding lurus dengan kualitas hidup dan fokus belajar harianmu. 
         </p>
         <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 text-left space-y-6 mt-12">
-          <h2 className="text-2xl font-bold text-slate-200">Misi Kami 🚀</h2>
+          <h2 className="text-2xl font-bold text-slate-200">Misi Kami</h2>
           <p className="text-slate-400 leading-relaxed">
             Kami bertujuan membantu pelajar, mahasiswa, dan profesional muda untuk melacak pola tidur mereka secara akurat. Dengan antarmuka yang modern dan analisis data yang cerdas, kami mengubah angka-angka jam tidur menjadi *insight* yang bisa langsung diterapkan untuk membangun kebiasaan yang lebih sehat (Sleep Hygiene).
           </p>

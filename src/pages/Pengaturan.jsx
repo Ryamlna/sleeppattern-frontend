@@ -34,21 +34,21 @@ export default function Pengaturan() {
             <span className="text-xl font-bold tracking-wide">SleepPattern</span>
           </div>
           <nav className="space-y-2 text-sm font-medium text-slate-400">
-            <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span>📊</span> Dashboard</Link>
-            <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span>📑</span> Recap</Link>
-            <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span>💡</span> Edukasi</Link>
-            <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800"><span>⚙️</span> Pengaturan</Link>
+            <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span></span> Dashboard</Link>
+            <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span></span> Recap</Link>
+            <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span></span> Edukasi</Link>
+            <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800"><span></span> Pengaturan</Link>
           </nav>
         </div>
         <div>
-          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium"><span>🚪</span> Keluar</button>
+          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium"><span></span> Keluar</button>
         </div>
       </aside>
 
       <div className="flex-1 min-h-screen pb-20 relative z-10">
         <header className="max-w-6xl mx-auto px-8 pt-8 pb-6 flex justify-between items-center border-b border-slate-900">
           <div>
-            <h1 className="text-2xl font-bold text-white">Pengaturan ⚙️</h1>
+            <h1 className="text-2xl font-bold text-white">Pengaturan</h1>
             <p className="text-slate-400 text-sm mt-0.5">Kelola profil dan akun aplikasimu.</p>
           </div>
           <div className="flex items-center gap-6">

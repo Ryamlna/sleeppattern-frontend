@@ -47,14 +47,14 @@ export default function DetailEdukasi() {
             <span className="text-xl font-bold tracking-wide">SleepPattern</span>
           </div>
           <nav className="space-y-2 text-sm font-medium text-slate-400">
-            <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span>📊</span> Dashboard</Link>
-            <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span>📑</span> Recap</Link>
-            <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800"><span>💡</span> Edukasi</Link>
-            <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span>⚙️</span> Pengaturan</Link>
+            <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span></span> Dashboard</Link>
+            <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span></span> Recap</Link>
+            <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800"><span></span> Edukasi</Link>
+            <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors"><span></span> Pengaturan</Link>
           </nav>
         </div>
         <div>
-          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium"><span>🚪</span> Keluar</button>
+          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium"><span></span> Keluar</button>
         </div>
       </aside>
 
@@ -88,7 +88,7 @@ export default function DetailEdukasi() {
 
             <div className="mt-12 pt-8 border-t border-slate-800">
               <p className="text-xs text-slate-500 flex items-center gap-2">
-                <span className="text-base">📌</span> Sumber Referensi Medis: <strong className="text-slate-400">{artikel.source}</strong>
+                <span className="text-base"></span> Sumber Referensi Medis: <strong className="text-slate-400">{artikel.source}</strong>
               </p>
             </div>
           </article>

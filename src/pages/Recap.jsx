@@ -19,7 +19,7 @@ export default function Recap() {
 
   const fetchRecords = async (email) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/sleep/${email}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep/${email}`);
       const data = await res.json();
       if (res.ok) {
         setAllRecords(data);

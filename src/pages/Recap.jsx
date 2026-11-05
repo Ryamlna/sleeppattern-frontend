@@ -3,6 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import StarBackground from '../components/StarBackground';
 
+// Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+
 export default function Recap() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -19,7 +22,7 @@ export default function Recap() {
 
   const fetchRecords = async (email) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep/${email}`);
+      const res = await fetch(`${API_URL}/api/sleep/${email}`);
       const data = await res.json();
       if (res.ok) {
         setAllRecords(data);

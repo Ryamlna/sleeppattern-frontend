@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
+// Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+
 export default function Landing() {
   const navigate = useNavigate();
   
@@ -25,7 +28,7 @@ export default function Landing() {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
+       const res = await fetch(`${API_URL}/api/auth/google`, {
        method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: tokenResponse.access_token }),

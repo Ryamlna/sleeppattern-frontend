@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import StarBackground from '../components/StarBackground';
 
+// Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -25,7 +28,7 @@ export default function Dashboard() {
   // PERBAIKAN: Menggunakan URL dinamis Vercel (import.meta.env.VITE_API_URL)
   const fetchRecords = async (email) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep/${email}`);
+      const res = await fetch(`${API_URL}/api/sleep/${email}`);
       const data = await res.json();
       if (res.ok) {
         setRecords(data);
@@ -105,7 +108,7 @@ export default function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep`, {
+      const res = await fetch(`${API_URL}/api/sleep`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email, date, sleepTime, wakeTime, quality, usedGadget, didExercise }),
@@ -130,7 +133,7 @@ export default function Dashboard() {
     const id = deleteModal.id;
     setDeleteModal({ isopen: false, id: null });
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sleep/${id}`, { 
+      const res = await fetch(`${API_URL}/api/sleep/${id}`, { 
         method: 'DELETE' 
       });
       if (res.ok) {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { artikelEdukasi } from '../data/artikelEdukasi';
+import MobileNav from '../components/MobileNav';
 
 export default function DetailEdukasi() {
   const { id } = useParams(); // Mengambil ID dari URL
@@ -37,6 +38,8 @@ export default function DetailEdukasi() {
     <div className="min-h-screen bg-slate-950 text-white font-sans flex selection:bg-green-500 selection:text-slate-900">
       
       {/* SIDEBAR TETAP ADA */}
+      {/* Menu sidebar untuk HP */}
+      <MobileNav active="edukasi" onLogout={handleLogout} />
       <aside className="w-64 border-r border-slate-800/80 p-6 hidden lg:flex flex-col justify-between bg-slate-950">
         <div className="space-y-8">
           <div className="flex items-center gap-2">

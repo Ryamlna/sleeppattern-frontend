@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import StarBackground from '../components/StarBackground';
+import MobileNav from '../components/MobileNav';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
@@ -127,6 +128,8 @@ export default function Recap() {
       
       <StarBackground />
 
+      {/* Menu sidebar untuk HP */}
+      <MobileNav active="recap" onLogout={handleLogout} />
       <aside className="w-64 border-r border-slate-800/80 p-6 hidden lg:flex flex-col justify-between bg-slate-950 relative z-10">
         <div className="space-y-8">
           <div className="flex items-center gap-2">

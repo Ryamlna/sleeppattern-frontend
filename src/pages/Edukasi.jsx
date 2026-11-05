@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { artikelEdukasi } from '../data/artikelEdukasi';
 import StarBackground from '../components/StarBackground';
+import MobileNav from '../components/MobileNav';
 
 export default function Edukasi() {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ export default function Edukasi() {
       
       <StarBackground />
 
+      {/* Menu sidebar untuk HP */}
+      <MobileNav active="edukasi" onLogout={handleLogout} />
       <aside className="w-64 border-r border-slate-800/80 p-6 hidden lg:flex flex-col justify-between bg-slate-950 relative z-10">
         <div className="space-y-8">
           <div className="flex items-center gap-2">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import StarBackground from '../components/StarBackground';
+import MobileNav from '../components/MobileNav';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
@@ -172,6 +173,8 @@ export default function Dashboard() {
       {/* SUNTIKKAN KOMPONEN BINTANG DI SINI */}
       <StarBackground />
       {/* SIDEBAR: Tambahkan 'relative z-10' */}
+      {/* Menu sidebar untuk HP */}
+      <MobileNav active="dashboard" onLogout={handleLogout} hideButton={isModalOpen || detailModal.isOpen || deleteModal.isOpen || successModal} />
       <aside className="w-64 border-r border-slate-800/80 p-6 hidden lg:flex flex-col justify-between bg-slate-950 relative z-10">
         <div className="space-y-8">
           <div className="flex items-center gap-2">

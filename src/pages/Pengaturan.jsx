@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import StarBackground from '../components/StarBackground';
+import MobileNav from '../components/MobileNav';
 
 export default function Pengaturan() {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ export default function Pengaturan() {
       
       <StarBackground />
 
+      {/* Menu sidebar untuk HP */}
+      <MobileNav active="pengaturan" onLogout={handleLogout} />
       <aside className="w-64 border-r border-slate-800/80 p-6 hidden lg:flex flex-col justify-between bg-slate-950 relative z-10">
         <div className="space-y-8">
           <div className="flex items-center gap-2">

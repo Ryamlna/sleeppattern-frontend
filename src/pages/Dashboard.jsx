@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import StarBackground from '../components/StarBackground';
 import MobileNav from '../components/MobileNav';
+import SleepCalculator from '../components/SleepCalculator';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
@@ -325,6 +326,8 @@ export default function Dashboard() {
             </div>
           </div>
           
+          <SleepCalculator />
+
           <div className="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-8 backdrop-blur-sm">
             <h3 className="text-lg font-bold mb-6 text-slate-200">Riwayat Tidur Terbaru</h3>
             {records.length === 0 ? (

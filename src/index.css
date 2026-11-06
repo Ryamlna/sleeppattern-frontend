@@ -1,3 +1,135 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* =====================================================
+   TEMA TERANG / GELAP
+   Nilai variabel ditulis "r g b" (tanpa koma) agar bisa dipakai bersama opacity Tailwind.
+   - :root           = mode gelap (sama persis dengan warna asli Tailwind, tampilan lama tidak berubah)
+   - html.light      = mode terang
+   - .theme-fixed    = bagian yang SELALU gelap (mis. kartu hijau yang dibagikan di Recap)
+   ===================================================== */
+:root,
+.theme-fixed {
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-800: 30 41 59;
+  --slate-900: 15 23 42;
+  --slate-950: 2 6 23;
+
+  --green-300: 134 239 172;
+  --green-400: 74 222 128;
+  --red-300: 252 165 165;
+  --red-400: 248 113 113;
+  --yellow-300: 253 224 71;
+  --yellow-400: 250 204 21;
+  --orange-400: 251 146 60;
+
+  --fg-strong: 255 255 255; /* pengganti text-white */
+}
+
+html.light {
+  /* skala slate dibalik: yang tadinya paling gelap jadi paling terang */
+  --slate-50: 2 6 23;
+  --slate-100: 15 23 42;
+  --slate-200: 30 41 59;
+  --slate-300: 51 65 85;
+  --slate-400: 71 85 105;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 148 163 184;
+  --slate-800: 203 213 225;
+  --slate-900: 255 255 255;
+  --slate-950: 240 249 255; /* biru langit sangat muda */
+
+  --green-300: 21 128 61;
+  --green-400: 22 163 74;
+  --red-300: 185 28 28;
+  --red-400: 220 38 38;
+  --yellow-300: 161 98 7;
+  --yellow-400: 202 138 4;
+  --orange-400: 234 88 12;
+
+  --fg-strong: 15 23 42;
+}
+
+html { color-scheme: dark; }
+html.light { color-scheme: light; }
+
+html,
+body {
+  background-color: rgb(var(--slate-950));
+}
+
+/* ---- Penyesuaian khusus mode terang ---- */
+html.light .text-white,
+html.light .hover\:text-white:hover {
+  color: rgb(var(--fg-strong));
+}
+/* teks pada tombol berwarna tetap terbaca */
+html.light .bg-red-500.text-white {
+  color: #fff;
+}
+html.light .bg-green-500.text-slate-950,
+html.light .bg-green-500.text-slate-900 {
+  color: #052e16;
+}
+/* ikon jam/tanggal bawaan browser ikut tema */
+html.light .\[color-scheme\:dark\] {
+  color-scheme: light;
+}
+
+/* Transisi halus saat tema diganti (hanya aktif ±0,5 detik) */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease,
+    fill 0.4s ease,
+    stroke 0.4s ease !important;
+}
+
+/* =====================================================
+   ANIMASI LANGIT SIANG (mode terang)
+   ===================================================== */
+@keyframes sunArc {
+  0%   { transform: translate(8vw, 24vh); }
+  50%  { transform: translate(50vw, 7vh); }
+  100% { transform: translate(88vw, 24vh); }
+}
+@keyframes sunSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes sunPulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.12); opacity: 1; }
+}
+@keyframes cloudDrift {
+  from { transform: translateX(-40vw); }
+  to   { transform: translateX(130vw); }
+}
+
+.sun-arc     { animation: sunArc 80s ease-in-out infinite alternate; will-change: transform; }
+.sun-rays    { animation: sunSpin 40s linear infinite; }
+.sun-glow    { animation: sunPulse 5s ease-in-out infinite; }
+.cloud-drift { animation: cloudDrift linear infinite; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sun-arc,
+  .sun-rays,
+  .sun-glow,
+  .cloud-drift {
+    animation: none;
+  }
+  .sun-arc { transform: translate(60vw, 12vh); }
+  .cloud-drift { transform: translateX(20vw); }
+}

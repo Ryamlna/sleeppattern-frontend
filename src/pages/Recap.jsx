@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import StarBackground from '../components/StarBackground';
 import MobileNav from '../components/MobileNav';
+import ThemeToggle from '../components/ThemeToggle';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
@@ -140,22 +141,23 @@ export default function Recap() {
           </div>
           <nav className="space-y-2 text-sm font-medium text-slate-400">
             <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span></span> Dashboard
+              <span>📊</span> Dashboard
             </Link>
             <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800">
-              <span></span> Recap
+              <span>📑</span> Recap
             </Link>
             <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span></span> Edukasi
+              <span>💡</span> Edukasi
             </Link>
             <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span></span> Pengaturan
+              <span>⚙️</span> Pengaturan
             </Link>
+            <ThemeToggle variant="sidebar" />
           </nav>
         </div>
         <div>
           <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium">
-            <span></span> Keluar
+            <span>🚪</span> Keluar
           </button>
         </div>
       </aside>
@@ -163,7 +165,7 @@ export default function Recap() {
       <div className="flex-1 min-h-screen pb-20 relative z-10">
         <header className="max-w-6xl mx-auto px-8 pt-8 pb-6 flex justify-between items-center border-b border-slate-900">
           <div>
-            <h1 className="text-2xl font-bold text-white">Sleep Recap</h1>
+            <h1 className="text-2xl font-bold text-white">Sleep Recap 🏆</h1>
             <p className="text-slate-400 text-sm mt-0.5">Lihat kembali jejak pola tidurmu bulan ini.</p>
           </div>
           <div className="flex items-center gap-6">
@@ -200,7 +202,7 @@ export default function Recap() {
             
             <div 
               ref={cardRef} 
-              className="relative w-full max-w-2xl bg-gradient-to-br from-green-500 to-emerald-700 rounded-3xl p-10 overflow-hidden shadow-2xl shadow-green-500/20"
+              className="theme-fixed relative w-full max-w-2xl bg-gradient-to-br from-green-500 to-emerald-700 rounded-3xl p-10 overflow-hidden shadow-2xl shadow-green-500/20"
             >
               <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
               <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-slate-900/20 rounded-full blur-3xl pointer-events-none"></div>

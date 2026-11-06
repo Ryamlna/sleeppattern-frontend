@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import StarBackground from '../components/StarBackground';
 import MobileNav from '../components/MobileNav';
 import SleepCalculator from '../components/SleepCalculator';
+import ThemeToggle from '../components/ThemeToggle';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
@@ -195,6 +196,7 @@ export default function Dashboard() {
             <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
               <span></span> Pengaturan
             </Link>
+            <ThemeToggle variant="sidebar" />
           </nav>
         </div>
         <div>

@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
+import StarBackground from '../components/StarBackground';
+import Sun from '../components/Sun';
+import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false); 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); 
@@ -96,7 +101,9 @@ export default function Landing() {
         `}
       </style>
 
-      {/* LATAR BELAKANG BINTANG KELAP-KELIP */}
+      {theme === 'dark' ? (
+        <>
+          {/* LATAR BELAKANG BINTANG KELAP-KELIP */}
       <div className="absolute inset-0 pointer-events-none z-0">
         {stars.map((star, i) => (
           <div
@@ -115,6 +122,10 @@ export default function Landing() {
         {/* Efek gradien kabut di bagian bawah */}
         <div className="absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-slate-950 to-transparent"></div>
       </div>
+        </>
+      ) : (
+        <StarBackground showSun={false} />
+      )}
 
       {/* NAVBAR */}
       <nav className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center relative z-10">
@@ -131,9 +142,12 @@ export default function Landing() {
           <button onClick={() => setIsAuthModalOpen(true)} className="hover:text-green-400 transition-colors cursor-pointer relative z-20">Edukasi</button>
         </div>
 
-        <button onClick={() => setIsLoginModalOpen(true)} className="hidden md:block px-6 py-2 rounded-full border border-slate-700 hover:border-slate-500 transition-colors text-sm font-medium cursor-pointer relative z-20">
-          Masuk
-        </button>
+        <div className="flex items-center gap-3">
+          <ThemeToggle variant="icon" />
+          <button onClick={() => setIsLoginModalOpen(true)} className="hidden md:block px-6 py-2 rounded-full border border-slate-700 hover:border-slate-500 transition-colors text-sm font-medium cursor-pointer relative z-20">
+            Masuk
+          </button>
+        </div>
       </nav>
 
       {/* KONTEN UTAMA */}
@@ -163,7 +177,13 @@ export default function Landing() {
         {/* ILUSTRASI ANIMASI BERGERAK */}
         <div className="relative aspect-square w-full max-w-lg mx-auto flex items-center justify-center pointer-events-none">
           
-          {/* Cahaya di belakang bulan */}
+          {theme === 'light' ? (
+            <div className="relative animate-float-moon z-20">
+              <Sun className="w-40 h-40" />
+            </div>
+          ) : (
+            <>
+              {/* Cahaya di belakang bulan */}
           <div className="absolute w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl animate-pulse"></div>
 
           {/* Bulan yang mengambang */}
@@ -177,14 +197,16 @@ export default function Landing() {
             <span className="absolute -top-8 right-6 text-2xl font-bold text-green-400 animate-zzz-2">z</span>
             <span className="absolute -top-12 right-12 text-3xl font-bold text-green-400 animate-zzz-3">z</span>
           </div>
+            </>
+          )}
 
           {/* Awan yang bergeser perlahan */}
-          <div className="absolute bottom-24 left-10 animate-float-cloud text-slate-700/80 z-30" style={{ animationDelay: '1s' }}>
+          <div className="absolute bottom-24 left-10 animate-float-cloud text-slate-700/80 z-30" style={{ animationDelay: '1s', ...(theme === 'light' && { color: 'rgba(255,255,255,0.95)' }) }}>
             <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18.9 9.8C18.6 5.8 15.3 2.7 11.2 3.1 8 3.4 5.4 6 5.1 9.1c-2.8.2-5 2.5-5 5.3 0 2.9 2.4 5.3 5.3 5.3h13.2C21.7 19.7 24 17.3 24 14.4c0-2.4-1.7-4.4-4-4.9-.1-1.3-.5-2.5-1.1-3.7z"/>
             </svg>
           </div>
-          <div className="absolute bottom-16 right-16 animate-float-cloud text-slate-800/80 z-10" style={{ animationDirection: 'alternate-reverse' }}>
+          <div className="absolute bottom-16 right-16 animate-float-cloud text-slate-800/80 z-10" style={{ animationDirection: 'alternate-reverse', ...(theme === 'light' && { color: 'rgba(255,255,255,0.95)' }) }}>
             <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18.9 9.8C18.6 5.8 15.3 2.7 11.2 3.1 8 3.4 5.4 6 5.1 9.1c-2.8.2-5 2.5-5 5.3 0 2.9 2.4 5.3 5.3 5.3h13.2C21.7 19.7 24 17.3 24 14.4c0-2.4-1.7-4.4-4-4.9-.1-1.3-.5-2.5-1.1-3.7z"/>
             </svg>

@@ -5,6 +5,9 @@ import StarBackground from '../components/StarBackground';
 import Sun from '../components/Sun';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
+import LanguageToggle from '../components/LanguageToggle';
+import { CloseIcon, LockIcon, KeyIcon } from '../components/Icons';
+import { useLanguage } from '../context/LanguageContext';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
@@ -12,6 +15,7 @@ const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 export default function Landing() {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { t } = useLanguage();
   
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false); 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); 
@@ -52,7 +56,7 @@ export default function Landing() {
 
   const handleDemoLogin = () => {
     const demoUser = {
-      name: 'Akun Demo',
+      name: t('landing.demoName'),
       email: 'demo@sleeppattern.id',
       picture: 'https://ui-avatars.com/api/?name=Akun+Demo&background=10B981&color=fff'
     };
@@ -137,15 +141,16 @@ export default function Landing() {
         </div>
         
         <div className="hidden md:flex gap-8 text-sm font-medium text-slate-300">
-          <Link to="/tentangkami" className="hover:text-green-400 transition-colors cursor-pointer relative z-20">Tentang Kami</Link>
-          <button onClick={() => setIsAuthModalOpen(true)} className="hover:text-green-400 transition-colors cursor-pointer relative z-20">Fitur</button>
-          <button onClick={() => setIsAuthModalOpen(true)} className="hover:text-green-400 transition-colors cursor-pointer relative z-20">Edukasi</button>
+          <Link to="/tentangkami" className="hover:text-green-400 transition-colors cursor-pointer relative z-20">{t('landing.about')}</Link>
+          <button onClick={() => setIsAuthModalOpen(true)} className="hover:text-green-400 transition-colors cursor-pointer relative z-20">{t('landing.features')}</button>
+          <button onClick={() => setIsAuthModalOpen(true)} className="hover:text-green-400 transition-colors cursor-pointer relative z-20">{t('landing.education')}</button>
         </div>
 
         <div className="flex items-center gap-3">
+          <LanguageToggle variant="icon" />
           <ThemeToggle variant="icon" />
           <button onClick={() => setIsLoginModalOpen(true)} className="hidden md:block px-6 py-2 rounded-full border border-slate-700 hover:border-slate-500 transition-colors text-sm font-medium cursor-pointer relative z-20">
-            Masuk
+            {t('landing.signIn')}
           </button>
         </div>
       </nav>
@@ -154,22 +159,22 @@ export default function Landing() {
       <main className="max-w-7xl mx-auto px-6 pt-16 pb-32 grid md:grid-cols-2 gap-12 items-center relative z-10 min-h-[80vh]">
         <div className="flex flex-col gap-6">
           <h1 className="text-5xl md:text-6xl font-extrabold leading-tight drop-shadow-lg">
-            Pahami Pola Tidurmu, <br/>
-            <span className="text-green-400">Tingkatkan Konsentrasi</span> Belajar
+            {t('landing.heroTitle')} <br/>
+            <span className="text-green-400">{t('landing.heroAccent')}</span> {t('landing.heroEnd')}
           </h1>
           <p className="text-lg text-slate-300 max-w-lg leading-relaxed drop-shadow-md">
-            Lacak durasi tidur, bangun kebiasaan sehat, dan dapatkan insight berdasarkan jurnal medis untuk memaksimalkan fokus akademismu esok hari.
+            {t('landing.heroDesc')}
           </p>
           
           <div className="flex flex-wrap gap-4 mt-4 relative z-20">
             <button onClick={handleDemoLogin} className="px-8 py-3.5 bg-green-500 hover:bg-green-400 text-slate-950 font-bold rounded-full transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-green-500/20">
-              Coba Akun Demo
+              {t('landing.tryDemo')}
             </button>
             <button onClick={handleGoogleLogin} className="px-8 py-3.5 bg-slate-900/80 backdrop-blur-md border border-slate-700 hover:bg-slate-800 text-white font-medium rounded-full flex items-center gap-2 transition-colors shadow-lg">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
               </svg>
-              Masuk dengan Google
+              {t('landing.signInGoogle')}
             </button>
           </div>
         </div>
@@ -220,15 +225,15 @@ export default function Landing() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity">
           <div className="absolute inset-0 cursor-pointer" onClick={() => setIsAuthModalOpen(false)}></div>
           <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center text-center">
-            <button onClick={() => setIsAuthModalOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors">✕</button>
-            <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-5 border border-slate-700"><span className="text-2xl">🔒</span></div>
-            <h2 className="text-2xl font-bold text-white mb-2">Akses Terbatas</h2>
-            <p className="text-slate-400 text-sm mb-8 leading-relaxed">Kamu harus masuk terlebih dahulu untuk menjelajahi fitur canggih dan membaca materi edukasi di SleepPattern.</p>
+            <button onClick={() => setIsAuthModalOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors" aria-label={t('common.close')}><CloseIcon className="w-5 h-5" /></button>
+            <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-5 border border-slate-700"><LockIcon className="w-7 h-7 text-green-400" /></div>
+            <h2 className="text-2xl font-bold text-white mb-2">{t('landing.restrictedTitle')}</h2>
+            <p className="text-slate-400 text-sm mb-8 leading-relaxed">{t('landing.restrictedDesc')}</p>
             <div className="flex flex-col gap-3 w-full">
-              <button onClick={handleDemoLogin} className="w-full py-3.5 bg-green-500 hover:bg-green-400 text-slate-950 font-bold rounded-xl transition-colors">Gunakan Akun Demo</button>
+              <button onClick={handleDemoLogin} className="w-full py-3.5 bg-green-500 hover:bg-green-400 text-slate-950 font-bold rounded-xl transition-colors">{t('landing.useDemo')}</button>
               <button onClick={handleGoogleLogin} className="w-full py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium rounded-xl flex items-center justify-center gap-2 transition-colors">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/></svg>
-                Masuk dengan Google
+                {t('landing.signInGoogle')}
               </button>
             </div>
           </div>
@@ -240,15 +245,15 @@ export default function Landing() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity">
           <div className="absolute inset-0 cursor-pointer" onClick={() => setIsLoginModalOpen(false)}></div>
           <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center text-center">
-            <button onClick={() => setIsLoginModalOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors">✕</button>
-            <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-5 border border-slate-700"><span className="text-2xl">🔑</span></div>
-            <h2 className="text-2xl font-bold text-white mb-2">Masuk ke Akun Anda</h2>
-            <p className="text-slate-400 text-sm mb-8 leading-relaxed">Silakan pilih metode masuk di bawah ini untuk melanjutkan ke Dashboard.</p>
+            <button onClick={() => setIsLoginModalOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors" aria-label={t('common.close')}><CloseIcon className="w-5 h-5" /></button>
+            <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-5 border border-slate-700"><KeyIcon className="w-7 h-7 text-green-400" /></div>
+            <h2 className="text-2xl font-bold text-white mb-2">{t('landing.loginTitle')}</h2>
+            <p className="text-slate-400 text-sm mb-8 leading-relaxed">{t('landing.loginDesc')}</p>
             <div className="flex flex-col gap-3 w-full">
-              <button onClick={handleDemoLogin} className="w-full py-3.5 bg-green-500 hover:bg-green-400 text-slate-950 font-bold rounded-xl transition-colors">Gunakan Akun Demo</button>
+              <button onClick={handleDemoLogin} className="w-full py-3.5 bg-green-500 hover:bg-green-400 text-slate-950 font-bold rounded-xl transition-colors">{t('landing.useDemo')}</button>
               <button onClick={handleGoogleLogin} className="w-full py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium rounded-xl flex items-center justify-center gap-2 transition-colors">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/></svg>
-                Masuk dengan Google
+                {t('landing.signInGoogle')}
               </button>
             </div>
           </div>

@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import StarBackground from '../components/StarBackground';
 import MobileNav from '../components/MobileNav';
-import ThemeToggle from '../components/ThemeToggle';
+import Sidebar from '../components/Sidebar';
+import { useLanguage } from '../context/LanguageContext';
 
 // Buang '/' di akhir supaya tidak jadi '//api/...' (Vercel me-redirect dan preflight CORS gagal)
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 export default function Recap() {
   const navigate = useNavigate();
+  const { t, locale } = useLanguage();
   const [user, setUser] = useState(null);
   
   const [allRecords, setAllRecords] = useState([]);
@@ -113,13 +115,13 @@ export default function Recap() {
       
     } catch (error) {
       console.error("Gagal membuat gambar:", error);
-      alert("Terjadi kesalahan saat memproses gambar.");
+      alert(t('recap.errImage'));
     } finally {
       setIsCapturing(false); 
     }
   };
 
-  const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  const months = Array.from({ length: 12 }, (_, i) => new Date(2000, i, 1).toLocaleDateString(locale, { month: 'long' }));
   const years = [2026, 2025, 2024];
 
   if (!user) return null;
@@ -131,42 +133,13 @@ export default function Recap() {
 
       {/* Menu sidebar untuk HP */}
       <MobileNav active="recap" onLogout={handleLogout} />
-      <aside className="w-64 border-r border-slate-800/80 p-6 hidden lg:flex flex-col justify-between bg-slate-950 relative z-10">
-        <div className="space-y-8">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center font-bold text-slate-950 relative">
-              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 leading-none mt-[1px]">S</span>
-            </div>
-            <span className="text-xl font-bold tracking-wide">SleepPattern</span>
-          </div>
-          <nav className="space-y-2 text-sm font-medium text-slate-400">
-            <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>📊</span> Dashboard
-            </Link>
-            <Link to="/recap" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800">
-              <span>📑</span> Recap
-            </Link>
-            <Link to="/edukasi" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>💡</span> Edukasi
-            </Link>
-            <Link to="/pengaturan" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors">
-              <span>⚙️</span> Pengaturan
-            </Link>
-            <ThemeToggle variant="sidebar" />
-          </nav>
-        </div>
-        <div>
-          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium">
-            <span>🚪</span> Keluar
-          </button>
-        </div>
-      </aside>
+      <Sidebar active="recap" onLogout={handleLogout} />
 
       <div className="flex-1 min-h-screen pb-20 relative z-10">
         <header className="max-w-6xl mx-auto px-8 pt-8 pb-6 flex justify-between items-center border-b border-slate-900">
           <div>
-            <h1 className="text-2xl font-bold text-white">Sleep Recap 🏆</h1>
-            <p className="text-slate-400 text-sm mt-0.5">Lihat kembali jejak pola tidurmu bulan ini.</p>
+            <h1 className="text-2xl font-bold text-white">{t('recap.title')}</h1>
+            <p className="text-slate-400 text-sm mt-0.5">{t('recap.subtitle')}</p>
           </div>
           <div className="flex items-center gap-6">
             <img src={user.picture} alt="Profile" className="w-10 h-10 rounded-full border border-slate-700 object-cover" referrerPolicy="no-referrer" />
@@ -177,7 +150,7 @@ export default function Recap() {
           
           <div className="flex items-center gap-4 bg-slate-900/40 p-4 rounded-2xl border border-slate-800 w-fit backdrop-blur-sm">
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 text-sm">Bulan:</span>
+              <span className="text-slate-400 text-sm">{t('recap.month')}</span>
               <select 
                 value={selectedMonth} 
                 onChange={(e) => setSelectedMonth(e.target.value)}
@@ -187,7 +160,7 @@ export default function Recap() {
               </select>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 text-sm">Tahun:</span>
+              <span className="text-slate-400 text-sm">{t('recap.year')}</span>
               <select 
                 value={selectedYear} 
                 onChange={(e) => setSelectedYear(e.target.value)}
@@ -216,28 +189,28 @@ export default function Recap() {
                 </div>
                 
                 <h2 className="text-slate-100 text-sm font-semibold uppercase tracking-widest mb-1">
-                  REKAP {months[selectedMonth]} {selectedYear}
+                  {t('recap.cardHeading', { month: months[selectedMonth], year: selectedYear })}
                 </h2>
                 <h3 className="text-4xl font-extrabold text-white mb-8 drop-shadow-md">
-                  {user.name.split(' ')[0]}'s Sleep Journey
+                  {t('recap.journey', { name: user.name.split(' ')[0] })}
                 </h3>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full bg-slate-950/30 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                   <div className="flex flex-col items-center justify-center border-r border-white/10 last:border-0">
-                    <span className="text-slate-300 text-xs font-medium mb-1">Total Tidur</span>
-                    <span className="text-2xl font-bold text-white">{stats.totalHours}<span className="text-sm font-normal text-slate-300 ml-1">Jam</span></span>
+                    <span className="text-slate-300 text-xs font-medium mb-1">{t('recap.total')}</span>
+                    <span className="text-2xl font-bold text-white">{stats.totalHours}<span className="text-sm font-normal text-slate-300 ml-1">{t('unit.hours')}</span></span>
                   </div>
                   <div className="flex flex-col items-center justify-center border-r border-white/10 last:border-0">
-                    <span className="text-slate-300 text-xs font-medium mb-1">Rata-rata</span>
-                    <span className="text-2xl font-bold text-white">{stats.avgHours}<span className="text-sm font-normal text-slate-300 ml-1">/hari</span></span>
+                    <span className="text-slate-300 text-xs font-medium mb-1">{t('recap.avg')}</span>
+                    <span className="text-2xl font-bold text-white">{stats.avgHours}<span className="text-sm font-normal text-slate-300 ml-1">{t('recap.perDay')}</span></span>
                   </div>
                   <div className="flex flex-col items-center justify-center border-r border-white/10 last:border-0 md:border-r">
-                    <span className="text-slate-300 text-xs font-medium mb-1">Skor Kualitas</span>
+                    <span className="text-slate-300 text-xs font-medium mb-1">{t('recap.score')}</span>
                     <span className="text-2xl font-bold text-yellow-300">{stats.avgScore}</span>
                   </div>
                   <div className="flex flex-col items-center justify-center">
-                    <span className="text-slate-300 text-xs font-medium mb-1">Hari Tercatat</span>
-                    <span className="text-2xl font-bold text-white">{stats.streak}<span className="text-sm font-normal text-slate-300 ml-1">Hari</span></span>
+                    <span className="text-slate-300 text-xs font-medium mb-1">{t('recap.logged')}</span>
+                    <span className="text-2xl font-bold text-white">{stats.streak}<span className="text-sm font-normal text-slate-300 ml-1">{t('unit.days')}</span></span>
                   </div>
                 </div>
 
@@ -261,12 +234,12 @@ export default function Recap() {
               {isCapturing ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                  Memproses...
+                  {t('recap.processing')}
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                  Unduh Kartu Recap
+                  {t('recap.share')}
                 </>
               )}
             </button>

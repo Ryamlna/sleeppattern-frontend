@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { NAV_ITEMS } from './navItems';
 import ThemeToggle from './ThemeToggle';
-
-const MENU = [
-  { key: 'dashboard', to: '/dashboard', icon: '📊', label: 'Dashboard' },
-  { key: 'recap', to: '/recap', icon: '📑', label: 'Recap' },
-  { key: 'edukasi', to: '/edukasi', icon: '💡', label: 'Edukasi' },
-  { key: 'pengaturan', to: '/pengaturan', icon: '⚙️', label: 'Pengaturan' },
-];
+import LanguageToggle from './LanguageToggle';
+import { CloseIcon, LogoutIcon, MenuIcon } from './Icons';
 
 /**
  * Menu sidebar versi HP (hanya tampil di layar < lg).
- * Di desktop, sidebar lama (<aside className="hidden lg:flex">) tetap dipakai.
+ * Di desktop, dipakai komponen Sidebar.
  *
  * Props:
  *  - active:     'dashboard' | 'recap' | 'edukasi' | 'pengaturan'
@@ -19,6 +16,7 @@ const MENU = [
  *  - hideButton: sembunyikan tombol menu (mis. saat ada modal terbuka)
  */
 export default function MobileNav({ active, onLogout, hideButton = false }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   // Tutup dengan tombol Esc & kunci scroll halaman saat menu terbuka
@@ -43,13 +41,11 @@ export default function MobileNav({ active, onLogout, hideButton = false }) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Buka menu"
+          aria-label={t('nav.openMenu')}
           className="fixed right-5 z-20 w-14 h-14 rounded-full bg-green-500 text-slate-950 shadow-lg shadow-green-500/30 flex items-center justify-center active:scale-95 transition-transform"
           style={{ bottom: 'calc(1.25rem + env(safe-area-inset-bottom, 0px))' }}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <MenuIcon className="w-6 h-6" strokeWidth="2.5" />
         </button>
       )}
 
@@ -64,7 +60,7 @@ export default function MobileNav({ active, onLogout, hideButton = false }) {
       {/* Panel menu geser dari kiri */}
       <aside
         aria-hidden={!open}
-        className={`fixed inset-y-0 left-0 z-50 w-64 max-w-[80vw] border-r border-slate-800/80 p-6 flex flex-col justify-between bg-slate-950 transition-all duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] border-r border-slate-800/80 p-6 flex flex-col justify-between bg-slate-950 overflow-y-auto transition-all duration-300 ${
           open ? 'translate-x-0 visible' : '-translate-x-full invisible'
         }`}
       >
@@ -77,31 +73,30 @@ export default function MobileNav({ active, onLogout, hideButton = false }) {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Tutup menu"
+              aria-label={t('nav.closeMenu')}
               className="text-slate-400 hover:text-white p-1"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 6l12 12M18 6L6 18" />
-              </svg>
+              <CloseIcon className="w-5 h-5" />
             </button>
           </div>
 
           <nav className="space-y-2 text-sm font-medium text-slate-400">
-            {MENU.map((item) => (
+            {NAV_ITEMS.map(({ key, to, labelKey, Icon }) => (
               <Link
-                key={item.key}
-                to={item.to}
+                key={key}
+                to={to}
                 onClick={() => setOpen(false)}
                 className={
-                  item.key === active
+                  key === active
                     ? 'flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-green-400 border border-slate-800'
                     : 'flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 hover:text-slate-200 transition-colors'
                 }
               >
-                <span>{item.icon}</span> {item.label}
+                <Icon className="w-5 h-5" /> {t(labelKey)}
               </Link>
             ))}
             <ThemeToggle variant="sidebar" />
+            <LanguageToggle variant="sidebar" />
           </nav>
         </div>
 
@@ -111,9 +106,9 @@ export default function MobileNav({ active, onLogout, hideButton = false }) {
             setOpen(false);
             onLogout();
           }}
-          className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium"
+          className="mt-6 flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm font-medium"
         >
-          <span>🚪</span> Keluar
+          <LogoutIcon className="w-5 h-5" /> {t('nav.logout')}
         </button>
       </aside>
     </div>

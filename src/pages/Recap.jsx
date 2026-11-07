@@ -221,7 +221,7 @@ export default function Recap() {
                     </div>
                     <span className="text-white text-xs font-semibold">SleepPattern App</span>
                   </div>
-                  <span className="text-white/60 text-xs font-medium">sleeppattern.my.id</span>
+                  <span className="text-white/60 text-xs font-medium">sleeppattern-frontend.vercel.app</span>
                 </div>
               </div>
             </div>
